@@ -1,24 +1,42 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
+import { Route, Routes } from 'react-router-dom';
+import axios from 'axios';
 import './App.css';
+import MainPage from './Components/MainPage';
+import MyNav from './Components/MyNav';
+import SummaryPage from './Components/SummaryPage';
+import AboutUs from './Components/AboutUs';
+import Feedback from './Components/Feedback';
+import Features from './Components/Features';
+import SearchBar from './Components/SearchBar';
+import FileUpload from './Components/FileUpload'; 
 
-function App() {
+
+const App = () => {
+  const [answer, setAnswer] = useState('');
+
+  const handleSearch = async (query) => {
+    try {
+      const response = await axios.post('http://127.0.0.1:5000/ask', { query });
+      setAnswer(response.data.answer);
+    } catch (error) {
+      console.error('Error fetching the answer:', error);
+    }
+  };
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <div className="App">
+        <MyNav />
+        <Routes>
+          <Route path="/" element={<MainPage />} />
+          <Route path="/summary" element={<SummaryPage />} />
+          <Route path="/features" element={<Features />} />
+          <Route path="/about" element={<AboutUs />} />
+          <Route path="/feedback" element={<Feedback />} />
+          <Route path="/upload" element={<FileUpload />} /> 
+        </Routes>
+      </div>
+    </>
   );
 }
 
